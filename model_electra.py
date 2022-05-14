@@ -16,7 +16,7 @@ class Electra(nn.Module):
 
         # 加载预训练模型
         self.model_path = model_path
-        self.model = AutoModel.from_pretrained(model_path,from_tf=True)
+        self.model = AutoModel.from_pretrained(model_path)
 
         # hidden dim
         self.hidden_size = self.model.config.to_dict()['hidden_size']
@@ -77,7 +77,3 @@ def model_forward_test():
     model = Electra(model_path, pooling_type='first_last_avg')
     output = model(input_ids, token_type_ids, attention_mask)
     print(output.size())
-
-
-if __name__ == '__main__':
-    model_forward_test()
