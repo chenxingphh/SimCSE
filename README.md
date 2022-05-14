@@ -30,5 +30,5 @@ warm_up: 0.1
 
 | Dataset     | Dev         | Test
 | ----------- | ----------- |-----------|
-| CNSD_SNLI   |             |           |
+| CNSD_SNLI   |   0.6726         |  0.6432        |
 | CNSD_STS_B  |   0.7490          | 0.6959    |
