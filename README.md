@@ -24,6 +24,7 @@
 model: Bert_base
 batch_size: 16 # 注：论文里面的是[64, 128, 256, 512]
 lr: 3e-5
+epoch: 10
 warm_up: 0.1
 ```
 
