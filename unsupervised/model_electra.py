@@ -66,14 +66,3 @@ class Electra(nn.Module):
             final = nn.AdaptiveAvgPool2d((1, self.hidden_size))(concat_avg).squeeze(1)
 
         return final
-
-
-def model_forward_test():
-    input_ids, token_type_ids, attention_mask = torch.ones(12, 32, dtype=torch.int), \
-                                                torch.ones(12, 32, dtype=torch.int), \
-                                                torch.ones(12, 32, dtype=torch.int)
-
-    model_path = r'C:\Users\panhaihui\Desktop\机器学习\Pytorch\2-pretrain_model\model\zh\chinese-electra-small-generator'
-    model = Electra(model_path, pooling_type='first_last_avg')
-    output = model(input_ids, token_type_ids, attention_mask)
-    print(output.size())
