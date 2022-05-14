@@ -6,17 +6,17 @@
 import torch
 import torch.nn.functional as F
 from model_electra import Electra
-from dataset_STS_B import STS_B
+from dataset_CNSD_SNLI import CNSD_SNLI
 from transformers import AutoTokenizer, get_linear_schedule_with_warmup
 from torch.utils.data import DataLoader
 import time
 import scipy.stats
 
 
-def simcse_unsupervised_loss(y_pred, t=0.05):
-    # SimCSE中无监督的输入形式为:[original1, original1,original2, original2]
-    # [o1, o1, o2, o2,...]
-    pair_num = 2
+def simcse_supervised_loss(y_pred, t=0.05):
+    # SimCSE中有监督的输入形式为:[original, entailment, contradict]
+    # [o1, e1, c1, o2, e2, c2,...]
+    pair_num = 3
 
     assert y_pred.shape[0] % pair_num == 0, "batch_size must be a multiple of pair_num!"
 
@@ -54,16 +54,16 @@ def train(model, dataloader, optimizer, epoch):
         optimizer.zero_grad()
         start_time = time.time()
 
-        # 训练集中每个数据是以[s1, s1]进行处理
-        input_ids = batch['input_ids'].view(len(batch['input_ids']) * 2, -1).to(device)
-        attention_mask = batch['attention_mask'].view(len(batch['attention_mask']) * 2, -1).to(device)
-        token_type_ids = batch['token_type_ids'].view(len(batch['token_type_ids']) * 2, -1).to(device)
+        # 训练集中每个数据是以[original, entailment, contradict]进行处理
+        input_ids = batch['input_ids'].view(len(batch['input_ids']) * 3, -1).to(device)
+        attention_mask = batch['attention_mask'].view(len(batch['attention_mask']) * 3, -1).to(device)
+        token_type_ids = batch['token_type_ids'].view(len(batch['token_type_ids']) * 3, -1).to(device)
 
         # 前馈计算
         pred = model(input_ids=input_ids, attention_mask=attention_mask, token_type_ids=token_type_ids)
 
         # 计算Loss
-        loss = simcse_unsupervised_loss(pred)
+        loss = simcse_supervised_loss(pred)
 
         # 计算梯度
         loss.backward()
@@ -173,13 +173,13 @@ if __name__ == '__main__':
     model = Electra(model_path, pooling_type='first_last_avg').to(device)
 
     # 加载训练集
-    train_dataset = STS_B(max_len=30, tokenizer=tokenizer, mode='train')
+    train_dataset = CNSD_SNLI(max_len=30, tokenizer=tokenizer, mode='train')
     train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, )
     # 加载验证集
-    dev_data = STS_B(max_len=30, tokenizer=tokenizer, mode='dev', )
+    dev_data = CNSD_SNLI(max_len=30, tokenizer=tokenizer, mode='dev', )
     dev_dataloader = DataLoader(dev_data, batch_size=batch_size, shuffle=False, )
     # 加载测试集
-    test_data = STS_B(max_len=30, tokenizer=tokenizer, mode='test', )
+    test_data = CNSD_SNLI(max_len=30, tokenizer=tokenizer, mode='test', )
     test_dataloader = DataLoader(test_data, batch_size=batch_size, shuffle=False, )
 
     # 优化器
