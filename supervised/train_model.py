@@ -168,7 +168,7 @@ if __name__ == '__main__':
     warm_up_proportion = 0.1
 
     # 加载模型
-    model_path = r'D:\1 深度学习\Model\NLP\pretrain_model\bert-base-chinese'
+    model_path = r'bert-base-chinese'
     tokenizer = AutoTokenizer.from_pretrained(model_path)
     model = Electra(model_path, pooling_type='first_last_avg').to(device)
 
@@ -197,8 +197,3 @@ if __name__ == '__main__':
 
         # 评估测试集
         evaluate_dev(model, dev_dataloader=dev_dataloader, test_dataloader=test_dataloader)
-
-'''
-batch size: 16 
-best_dev_spearman: 0.7490| best_test_spearman: 0.6959
-'''
