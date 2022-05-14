@@ -87,12 +87,3 @@ class CNSD_SNLI(Dataset):
                                 return_tensors='pt')
 
             return s1, s2, score
-
-
-if __name__ == '__main__':
-    model_path = r'D:\备份\机器学习\Pytorch\2-pretrain_model\model\zh\chinese-electra-small-ex-generator'
-    tokenizer = ElectraTokenizerFast.from_pretrained(model_path)
-
-    train_data = CNSD_SNLI(max_len=30, tokenizer=tokenizer, mode='dev')
-    print(train_data.raw_data_list[2:4])
-    # print(train_data.__getitem__(4))
