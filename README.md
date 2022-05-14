@@ -9,7 +9,6 @@
  ```
 数据示例:
 'sentence1': '一只长着长毛的白色狗跳跃着去抓一个红绿相间的玩具。', 'sentence2': '一只动物跳跃着去捕捉一个物体。', 'gold_label': 'entailment'
-
 'sentence1': '两位医生为病人做手术。', 'sentence2': '两名医生正在对一名男子进行手术。', 'gold_label': 'neutral'
  ```
 
