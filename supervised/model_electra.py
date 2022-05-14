@@ -16,7 +16,7 @@ class Electra(nn.Module):
 
         # 加载预训练模型
         self.model_path = model_path
-        self.model = AutoModel.from_pretrained(model_path,from_tf=True)
+        self.model = AutoModel.from_pretrained(model_path)
 
         # hidden dim
         self.hidden_size = self.model.config.to_dict()['hidden_size']
